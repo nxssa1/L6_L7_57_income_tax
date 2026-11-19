@@ -1,4 +1,18 @@
 def taxable_income(gross, regime, investments):
+    """Calculate taxable income based on gross income, tax regime, and investment deductions.
+
+    Args:
+        gross (int or float): Gross income; must be non‑negative.
+        regime (str): "new" or "old".
+        investments (int or float): Amount invested under old regime; must be non‑negative.
+
+    Returns:
+        int: Taxable income (>= 0).
+    """
+    if gross < 0:
+        raise ValueError("invalid income")
+    if investments < 0:
+        raise ValueError("invalid investments")
     if gross < 0:
         raise ValueError("invalid income")
     if regime == "new":
@@ -16,6 +30,18 @@ def taxable_income(gross, regime, investments):
 
 
 def tax_due(taxable, age):
+    """Calculate tax due based on taxable income and age.
+
+    Args:
+        taxable (int or float): Taxable income; must be non‑negative.
+        age (int): Age of the taxpayer; must be non‑negative.
+    Returns:
+        int: Tax due amount.
+    """
+    if taxable < 0:
+        raise ValueError("invalid amount")
+    if age < 0:
+        raise ValueError("invalid age")
     if taxable < 0:
         raise ValueError("invalid amount")
     if age >= 80:
