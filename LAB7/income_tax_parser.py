@@ -1,26 +1,59 @@
 def clean_pan(pan):
     """
     Removes spaces from a PAN and upper-cases it.
-    Assumes pan is a non-empty string.
+    Returns an empty string for any input that isn't a usable, non-empty string
+    instead of crashing (e.g. None, numbers, or whitespace-only text).
     """
-    return pan.strip().replace(' ', '').upper()
+    if not isinstance(pan, str):
+        return ""
+    cleaned = pan.strip().replace(' ', '').upper()
+    return cleaned
 
 def parse_amount(text):
     """
     Converts an amount such as 'Rs 12,50,000' into an int.
-    Assumes only digits remain after removing 'Rs', commas and spaces.
+    Strips 'Rs' and commas/spaces before converting. Returns None (instead of
+    raising) when the input isn't a string or doesn't contain a valid integer
+    after cleaning.
     """
-    text = text.replace('Rs', '').replace(',', '').strip()
-    return int(text)
+    if not isinstance(text, str):
+        return None
+    cleaned = text.replace('Rs', '').replace(',', '').strip()
+    if cleaned == "":
+        return None
+    try:
+        return int(cleaned)
+    except ValueError:
+        return None
 
 def parse_tax_slab(line):
     """
     Parses 'LOW-HIGH:RATE' into a (low, high, rate) tuple.
-    Assumes the line is always in that exact format.
+    Returns None (instead of raising) when the input isn't a string, is
+    missing the ':' or '-' separators, or any of the three parts isn't a
+    valid integer.
     """
-    limits, rate = line.split(':')
-    low, high = limits.split('-')
-    return int(low), int(high), int(rate)
+    if not isinstance(line, str):
+        return None
+
+    if ':' not in line:
+        return None
+    parts = line.split(':')
+    if len(parts) != 2:
+        return None
+    limits, rate = parts
+
+    if '-' not in limits:
+        return None
+    bounds = limits.split('-')
+    if len(bounds) != 2:
+        return None
+    low, high = bounds
+
+    try:
+        return int(low), int(high), int(rate)
+    except ValueError:
+        return None
 
 def main():
     print("==== Running clean_pan ====")
